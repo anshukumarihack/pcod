@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "home": "Home",
+    "resources": "Resources",
+    "chat": "AI Chat",
+    "contact": "Contact",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Your Journey to PCOD Wellness",
+    "subtitle": "Empowering you with knowledge, support, and care",
+    "features": {
+      "care": {
+        "title": "Personalized Care",
+        "description": "Get customized wellness plans tailored to your PCOD journey"
+      },
+      "resources": {
+        "title": "Resources",
+        "description": "Access comprehensive guides and educational materials"
+      },
+      "chat": {
+        "title": "AI Chat Support",
+        "description": "Get instant answers to your PCOD-related questions"
+      },
+      "expert": {
+        "title": "Expert Connect",
+        "description": "Connect with PCOD specialists and counselors"
+      }
+    }
+  },
+  "personalizedCare": {
+    "title": "Your Personalized Care Plan",
+    "diet": {
+      "title": "Diet Recommendations",
+      "calories": "Recommended daily calories",
+      "meals": "Meal Plans"
+    },
+    "exercise": {
+      "title": "Exercise Program",
+      "duration": "Duration",
+      "difficulty": "Difficulty",
+      "minutes": "minutes"
+    }
+  }
+}
