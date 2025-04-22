@@ -7,6 +7,57 @@
     "profile": "प्रोफ़ाइल",
     "logout": "लॉग आउट"
   },
+  "profile": {
+    "title": "मेरी प्रोफ़ाइल",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "saveChanges": "परिवर्तन सहेजें",
+    "cancel": "रद्द करें",
+    "personalInfo": {
+      "fullName": "पूरा नाम",
+      "age": "उम्र",
+      "gender": "लिंग",
+      "height": "ऊंचाई",
+      "weight": "वजन",
+      "bloodGroup": "रक्त समूह",
+      "allergies": "एलर्जी",
+      "medications": "वर्तमान दवाएं",
+      "medicalHistory": "चिकित्सा इतिहास",
+      "walkingGoal": "दैनिक चलने का लक्ष्य"
+    },
+    "camera": {
+      "takePhoto": "फोटो लें",
+      "uploadPhoto": "फोटो अपलोड करें",
+      "changePhoto": "फोटो बदलें"
+    },
+    "placeholders": {
+      "notSet": "सेट नहीं है",
+      "noneReported": "कोई नहीं बताया गया",
+      "selectGender": "लिंग चुनें"
+    },
+    "units": {
+      "cm": "सेमी",
+      "kg": "किग्रा",
+      "steps": "कदम"
+    }
+  },
+  "periodTracking": {
+    "title": "मासिक धर्म ट्रैकिंग",
+    "startDate": "प्रारंभ तिथि",
+    "endDate": "समाप्ति तिथि",
+    "symptoms": "लक्षण",
+    "notes": "नोट्स",
+    "addCycle": "मासिक धर्म चक्र जोड़ें",
+    "history": "मासिक धर्म इतिहास",
+    "symptomOptions": {
+      "Cramps": "ऐंठन",
+      "Headache": "सिरदर्द",
+      "Bloating": "पेट फूलना",
+      "Fatigue": "थकान",
+      "Mood Swings": "मूड स्विंग्स",
+      "Back Pain": "पीठ दर्द",
+      "Breast Tenderness": "स्तन में दर्द"
+    }
+  },
   "home": {
     "title": "पीसीओडी स्वास्थ्य की यात्रा",
     "subtitle": "ज्ञान, सहायता और देखभाल के साथ सशक्तिकरण",

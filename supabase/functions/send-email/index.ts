@@ -21,7 +21,7 @@ async function sendEmail(name: string, email: string, message: string) {
     },
     body: JSON.stringify({
       from: 'onboarding@resend.dev',
-      to: 'patelan81281@gmail.com',
+      to: 'patelan81281@gmail.com', // Your email address
       subject: 'New Contact Form Submission',
       html: `
         <h2>New Contact Form Submission</h2>

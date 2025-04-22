@@ -7,6 +7,57 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+  "profile": {
+    "title": "My Profile",
+    "editProfile": "Edit Profile",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "personalInfo": {
+      "fullName": "Full Name",
+      "age": "Age",
+      "gender": "Gender",
+      "height": "Height",
+      "weight": "Weight",
+      "bloodGroup": "Blood Group",
+      "allergies": "Allergies",
+      "medications": "Current Medications",
+      "medicalHistory": "Medical History",
+      "walkingGoal": "Daily Walking Goal"
+    },
+    "camera": {
+      "takePhoto": "Take Photo",
+      "uploadPhoto": "Upload Photo",
+      "changePhoto": "Change Photo"
+    },
+    "placeholders": {
+      "notSet": "Not set",
+      "noneReported": "None reported",
+      "selectGender": "Select Gender"
+    },
+    "units": {
+      "cm": "cm",
+      "kg": "kg",
+      "steps": "steps"
+    }
+  },
+  "periodTracking": {
+    "title": "Period Tracking",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "symptoms": "Symptoms",
+    "notes": "Notes",
+    "addCycle": "Add Period Cycle",
+    "history": "Period History",
+    "symptomOptions": {
+      "Cramps": "Cramps",
+      "Headache": "Headache",
+      "Bloating": "Bloating",
+      "Fatigue": "Fatigue",
+      "Mood Swings": "Mood Swings",
+      "Back Pain": "Back Pain",
+      "Breast Tenderness": "Breast Tenderness"
+    }
+  },
   "home": {
     "title": "Your Journey to PCOD Wellness",
     "subtitle": "Empowering you with knowledge, support, and care",

@@ -4,6 +4,8 @@ import { User, Calendar, Activity, FileText, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import ProfilePictureUpload from '../components/ProfilePictureUpload';
 
 interface Profile {
   id: string;
@@ -59,12 +61,11 @@ const commonSymptoms = [
 const genderOptions = ['Female', 'Male', 'Non-binary', 'Prefer not to say'];
 
 export default function Profile() {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [periodCycles, setPeriodCycles] = useState<PeriodCycle[]>([]);
-  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState('');
   const [newCycle, setNewCycle] = useState({
     start_date: '',
     end_date: '',
@@ -126,13 +127,11 @@ export default function Profile() {
             
           if (fetchError) throw fetchError;
           setProfile(newProfile);
-          setSelectedAvatar(newProfile?.avatar_url || '');
         } else {
           throw error;
         }
       } else {
         setProfile(data);
-        setSelectedAvatar(data?.avatar_url || '');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -175,7 +174,7 @@ export default function Profile() {
           allergies: profile.allergies,
           medications: profile.medications,
           gender: profile.gender,
-          avatar_url: selectedAvatar,
+          avatar_url: profile.avatar_url,
           walking_goal: profile.walking_goal,
           updated_at: new Date().toISOString(),
         })
@@ -184,7 +183,6 @@ export default function Profile() {
       if (error) throw error;
       toast.success('Profile updated successfully');
       setEditing(false);
-      setShowAvatarSelector(false);
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error('Failed to update profile');
@@ -219,6 +217,10 @@ export default function Profile() {
     }
   }
 
+  const handleImageSelect = (imageUrl: string) => {
+    setProfile(prev => prev ? { ...prev, avatar_url: imageUrl } : null);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-purple-50 flex items-center justify-center">
@@ -236,84 +238,28 @@ export default function Profile() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <User className="w-12 h-12 text-purple-600 mr-4" />
-                <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+                <h1 className="text-3xl font-bold text-gray-800">{t('profile.title')}</h1>
               </div>
               <button
                 onClick={() => setEditing(!editing)}
                 className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-200"
               >
-                {editing ? 'Cancel' : 'Edit Profile'}
+                {editing ? t('profile.cancel') : t('profile.editProfile')}
               </button>
             </div>
 
             <div className="flex justify-center mb-8">
-              <div className="relative">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="rounded-full overflow-hidden w-32 h-32 border-4 border-purple-200"
-                >
-                  {selectedAvatar ? (
-                    <img 
-                      src={selectedAvatar} 
-                      alt="Profile Avatar" 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-purple-100 flex items-center justify-center">
-                      <User className="w-16 h-16 text-purple-300" />
-                    </div>
-                  )}
-                </motion.div>
-                {editing && (
-                  <button
-                    onClick={() => setShowAvatarSelector(!showAvatarSelector)}
-                    className="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition-colors"
-                  >
-                    <Camera className="w-5 h-5" />
-                  </button>
-                )}
-              </div>
+              <ProfilePictureUpload
+                onImageSelect={handleImageSelect}
+                currentImage={profile?.avatar_url}
+              />
             </div>
-
-            <AnimatePresence>
-              {showAvatarSelector && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="mb-6"
-                >
-                  <h3 className="text-lg font-semibold mb-4">Choose your avatar</h3>
-                  <div className="grid grid-cols-5 gap-4">
-                    {avatars.map((avatar, index) => (
-                      <motion.button
-                        key={index}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setSelectedAvatar(avatar.url)}
-                        className={`rounded-lg p-2 ${
-                          selectedAvatar === avatar.url
-                            ? 'ring-2 ring-purple-600 bg-purple-50'
-                            : 'hover:bg-gray-50'
-                        }`}
-                      >
-                        <img
-                          src={avatar.url}
-                          alt={avatar.label}
-                          className="w-full h-auto"
-                        />
-                      </motion.button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
             {editing ? (
               <form onSubmit={updateProfile} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-700 mb-2">Full Name</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.fullName')}</label>
                     <input
                       type="text"
                       value={profile?.full_name || ''}
@@ -323,7 +269,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Age</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.age')}</label>
                     <input
                       type="number"
                       value={profile?.age || ''}
@@ -333,21 +279,21 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Gender</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.gender')}</label>
                     <select
                       value={profile?.gender || ''}
                       onChange={(e) => setProfile(prev => prev ? {...prev, gender: e.target.value} : null)}
                       className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
                     >
-                      <option value="">Select Gender</option>
+                      <option value="">{t('profile.placeholders.selectGender')}</option>
                       {genderOptions.map((gender) => (
-                        <option key={gender} value={gender}>{gender}</option>
+                        <option key={gender} value={gender}>{t(`profile.genderOptions.${gender}`)}</option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Daily Walking Goal (steps)</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.walkingGoal')}</label>
                     <input
                       type="number"
                       value={profile?.walking_goal || 10000}
@@ -357,7 +303,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Height (cm)</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.height')}</label>
                     <input
                       type="number"
                       value={profile?.height || ''}
@@ -367,7 +313,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Weight (kg)</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.weight')}</label>
                     <input
                       type="number"
                       value={profile?.weight || ''}
@@ -377,7 +323,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Blood Group</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.bloodGroup')}</label>
                     <input
                       type="text"
                       value={profile?.blood_group || ''}
@@ -387,7 +333,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Allergies</label>
+                    <label className="block text-gray-700 mb-2">{t('profile.personalInfo.allergies')}</label>
                     <input
                       type="text"
                       value={profile?.allergies || ''}
@@ -398,7 +344,7 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 mb-2">Current Medications</label>
+                  <label className="block text-gray-700 mb-2">{t('profile.personalInfo.medications')}</label>
                   <input
                     type="text"
                     value={profile?.medications || ''}
@@ -408,7 +354,7 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 mb-2">Medical History</label>
+                  <label className="block text-gray-700 mb-2">{t('profile.personalInfo.medicalHistory')}</label>
                   <textarea
                     value={profile?.medical_history || ''}
                     onChange={(e) => setProfile(prev => prev ? {...prev, medical_history: e.target.value} : null)}
@@ -423,59 +369,59 @@ export default function Profile() {
                   whileTap={{ scale: 0.98 }}
                   className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200"
                 >
-                  Save Changes
+                  {t('profile.saveChanges')}
                 </motion.button>
               </form>
             ) : (
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h2 className="text-gray-600 mb-1">Full Name</h2>
-                  <p className="text-lg">{profile?.full_name || 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.fullName')}</h2>
+                  <p className="text-lg">{profile?.full_name || t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Age</h2>
-                  <p className="text-lg">{profile?.age || 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.age')}</h2>
+                  <p className="text-lg">{profile?.age || t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Gender</h2>
-                  <p className="text-lg">{profile?.gender || 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.gender')}</h2>
+                  <p className="text-lg">{profile?.gender || t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Daily Walking Goal</h2>
-                  <p className="text-lg">{profile?.walking_goal || 10000} steps</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.walkingGoal')}</h2>
+                  <p className="text-lg">{profile?.walking_goal || 10000} {t('profile.units.steps')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Height</h2>
-                  <p className="text-lg">{profile?.height ? `${profile.height} cm` : 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.height')}</h2>
+                  <p className="text-lg">{profile?.height ? `${profile.height} ${t('profile.units.cm')}` : t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Weight</h2>
-                  <p className="text-lg">{profile?.weight ? `${profile.weight} kg` : 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.weight')}</h2>
+                  <p className="text-lg">{profile?.weight ? `${profile.weight} ${t('profile.units.kg')}` : t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Blood Group</h2>
-                  <p className="text-lg">{profile?.blood_group || 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.bloodGroup')}</h2>
+                  <p className="text-lg">{profile?.blood_group || t('profile.placeholders.notSet')}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-gray-600 mb-1">Allergies</h2>
-                  <p className="text-lg">{profile?.allergies || 'None reported'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.allergies')}</h2>
+                  <p className="text-lg">{profile?.allergies || t('profile.placeholders.noneReported')}</p>
                 </div>
 
                 <div className="md:col-span-2">
-                  <h2 className="text-gray-600 mb-1">Current Medications</h2>
-                  <p className="text-lg">{profile?.medications || 'None reported'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.medications')}</h2>
+                  <p className="text-lg">{profile?.medications || t('profile.placeholders.noneReported')}</p>
                 </div>
 
                 <div className="md:col-span-2">
-                  <h2 className="text-gray-600 mb-1">Medical History</h2>
-                  <p className="text-lg whitespace-pre-wrap">{profile?.medical_history || 'Not set'}</p>
+                  <h2 className="text-gray-600 mb-1">{t('profile.personalInfo.medicalHistory')}</h2>
+                  <p className="text-lg whitespace-pre-wrap">{profile?.medical_history || t('profile.placeholders.notSet')}</p>
                 </div>
               </div>
             )}
@@ -485,14 +431,14 @@ export default function Profile() {
           <div className="bg-white rounded-lg shadow-md p-8">
             <div className="flex items-center mb-6">
               <Calendar className="w-8 h-8 text-purple-600 mr-3" />
-              <h2 className="text-2xl font-bold">Period Tracking</h2>
+              <h2 className="text-2xl font-bold">{t('periodTracking.title')}</h2>
             </div>
 
             {/* Add New Cycle Form */}
             <form onSubmit={addPeriodCycle} className="mb-8 space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-700 mb-2">Start Date</label>
+                  <label className="block text-gray-700 mb-2">{t('periodTracking.startDate')}</label>
                   <input
                     type="date"
                     value={newCycle.start_date}
@@ -503,7 +449,7 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 mb-2">End Date</label>
+                  <label className="block text-gray-700 mb-2">{t('periodTracking.endDate')}</label>
                   <input
                     type="date"
                     value={newCycle.end_date}
@@ -514,7 +460,7 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Symptoms</label>
+                <label className="block text-gray-700 mb-2">{t('periodTracking.symptoms')}</label>
                 <div className="flex flex-wrap gap-2">
                   {commonSymptoms.map((symptom) => (
                     <button
@@ -535,14 +481,14 @@ export default function Profile() {
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      {symptom}
+                      {t(`periodTracking.symptomOptions.${symptom}`)}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Notes</label>
+                <label className="block text-gray-700 mb-2">{t('periodTracking.notes')}</label>
                 <textarea
                   value={newCycle.notes}
                   onChange={(e) => setNewCycle({...newCycle, notes: e.target.value})}
@@ -555,7 +501,7 @@ export default function Profile() {
                 type="submit"
                 className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200"
               >
-                Add Period Cycle
+                {t('periodTracking.addCycle')}
               </button>
             </form>
 
@@ -563,7 +509,7 @@ export default function Profile() {
             <div>
               <h3 className="text-xl font-semibold mb-4 flex items-center">
                 <FileText className="w-6 h-6 text-purple-600 mr-2" />
-                Period History
+                {t('periodTracking.history')}
               </h3>
               <div className="space-y-4">
                 {periodCycles.map((cycle) => (
@@ -580,7 +526,7 @@ export default function Profile() {
                               key={index}
                               className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full"
                             >
-                              {symptom}
+                              {t(`periodTracking.symptomOptions.${symptom}`)}
                             </span>
                           ))}
                         </div>
